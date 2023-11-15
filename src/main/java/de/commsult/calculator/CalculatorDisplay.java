@@ -31,7 +31,7 @@ public class CalculatorDisplay extends JFrame implements CalculatorUI {
                 "7", "8", "9", "/",
                 "4", "5", "6", "*",
                 "1", "2", "3", "-",
-                "0", ".", "=", "+"
+                "0", ".", "=", "+", "C" // Tambahkan tombol "C" untuk clear
         };
 
         for (String label : buttonLabels) {
@@ -50,16 +50,16 @@ public class CalculatorDisplay extends JFrame implements CalculatorUI {
             JButton source = (JButton) event.getSource();
             String buttonText = source.getText();
 
-            if (buttonText.equals("=") || event.getActionCommand().equals("\n")) {
-                // Handle equals sign or Enter key press
+            if (buttonText.equals("=")) {
                 String formula = display.getText();
                 try {
                     double result = calculator.calculate(formula);
                     display.setText(Double.toString(result));
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    display.setText("Error: " + e.getMessage());
+                    display.setText("Error");
                 }
+            } else if (buttonText.equals("C")) { // Clear jika tombol "C" ditekan
+                display.setText("");
             } else {
                 display.setText(display.getText() + buttonText);
             }

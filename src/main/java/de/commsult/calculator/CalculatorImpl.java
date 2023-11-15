@@ -22,25 +22,22 @@ public class CalculatorImpl implements Calculator {
     }
 
     private double evaluateExpression(String expression) {
-        // You need to implement the actual expression evaluation logic here
-        // For simplicity, let's assume a basic calculator that supports addition and subtraction
-
         // Split the expression based on addition and subtraction operators
         String[] addSubtractParts = expression.split("[+-]");
 
         double result = 0;
 
-        for (String part : addSubtractParts) {
+        for (int i = 0; i < addSubtractParts.length; i++) {
             // Split each part based on multiplication and division operators
-            String[] multiplyDivideParts = part.split("[*/]");
+            String[] multiplyDivideParts = addSubtractParts[i].split("[*/]");
 
             // Initialize the current result with the first value
             double currentResult = Double.parseDouble(multiplyDivideParts[0]);
 
             // Iterate over the rest of the parts
-            for (int i = 1; i < multiplyDivideParts.length; i++) {
-                String operator = part.replaceAll("[0-9.]+", ""); // Extract the operator
-                double operand = Double.parseDouble(multiplyDivideParts[i]);
+            for (int j = 1; j < multiplyDivideParts.length; j++) {
+                String operator = addSubtractParts[i].replaceAll("[0-9.]+", ""); // Extract the operator
+                double operand = Double.parseDouble(multiplyDivideParts[j]);
 
                 // Perform the operation based on the operator
                 switch (operator) {
@@ -57,13 +54,14 @@ public class CalculatorImpl implements Calculator {
             }
 
             // Update the overall result based on the current part
-            if (expression.contains("-")) {
-                result -= currentResult;
-            } else {
+            if (i == 0 || expression.charAt(expression.indexOf(addSubtractParts[i]) - 1) == '+') {
                 result += currentResult;
+            } else {
+                result -= currentResult;
             }
         }
 
         return result;
     }
+
 }
