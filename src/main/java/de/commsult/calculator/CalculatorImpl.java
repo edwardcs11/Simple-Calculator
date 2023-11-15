@@ -22,46 +22,65 @@ public class CalculatorImpl implements Calculator {
     }
 
     private double evaluateExpression(String expression) {
-        // Split the expression based on addition and subtraction operators
-        String[] addSubtractParts = expression.split("[+-]");
-
+        // Initialize the result
         double result = 0;
 
-        for (int i = 0; i < addSubtractParts.length; i++) {
-            // Split each part based on multiplication and division operators
-            String[] multiplyDivideParts = addSubtractParts[i].split("[*/]");
+        // Split the expression into numbers and operators
+        String[] parts = expression.split("(?=[-+*/])|(?<=[-+*/])");
 
-            // Initialize the current result with the first value
-            double currentResult = Double.parseDouble(multiplyDivideParts[0]);
+        // Initialize current values
+        double currentNumber = 0;
+        String currentOperator = "+";
 
-            // Iterate over the rest of the parts
-            for (int j = 1; j < multiplyDivideParts.length; j++) {
-                String operator = addSubtractParts[i].replaceAll("[0-9.]+", ""); // Extract the operator
-                double operand = Double.parseDouble(multiplyDivideParts[j]);
-
-                // Perform the operation based on the operator
-                switch (operator) {
+        // Iterate over the parts
+        for (String part : parts) {
+            if (isNumber(part)) {
+                // If the part is a number, parse it and perform the operation with the current operator
+                double number = Double.parseDouble(part);
+                switch (currentOperator) {
+                    case "+":
+                        result += currentNumber;
+                        currentNumber = number;
+                        break;
+                    case "-":
+                        result += currentNumber;
+                        currentNumber = -number;
+                        break;
                     case "*":
-                        currentResult *= operand;
+                        currentNumber *= number;
                         break;
                     case "/":
-                        if (operand == 0) {
+                        if (number == 0) {
                             throw new ArithmeticException("Cannot divide by zero");
                         }
-                        currentResult /= operand;
+                        currentNumber /= number;
                         break;
                 }
-            }
-
-            // Update the overall result based on the current part
-            if (i == 0 || expression.charAt(expression.indexOf(addSubtractParts[i]) - 1) == '+') {
-                result += currentResult;
+            } else if (isOperator(part)) {
+                // If the part is an operator, update the current operator
+                currentOperator = part;
             } else {
-                result -= currentResult;
+                // Invalid part (neither number nor operator)
+                throw new IllegalArgumentException("Invalid formula");
             }
         }
+
+        // Add the last number to the result
+        result += currentNumber;
 
         return result;
     }
 
+    private boolean isNumber(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private boolean isOperator(String str) {
+        return str.matches("[-+*/]");
+    }
 }
