@@ -17,7 +17,7 @@ public class CalculatorDisplay extends JFrame implements CalculatorUI {
     public void createAndShowGUI(Calculator calculator) {
         this.calculator = calculator;
 
-        setTitle("Swing Calculator");
+        setTitle("Calculator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 400);
 
