@@ -10,7 +10,7 @@ public class CalculatorDisplay extends JFrame implements CalculatorUI {
     private Calculator calculator;
 
     public CalculatorDisplay() {
-        // Constructor kosong
+        // Empty constructor
     }
 
     @Override
@@ -19,23 +19,26 @@ public class CalculatorDisplay extends JFrame implements CalculatorUI {
 
         setTitle("Calculator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(300, 400);
+        setSize(500, 600); // Calculator size
 
         display = new JTextField();
         display.setEditable(false);
+        display.setFont(new Font("Arial", Font.PLAIN, 24)); // Font size
+        display.setHorizontalAlignment(JTextField.RIGHT); // Text alignment
         add(display, BorderLayout.NORTH);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(4, 4));
+        JPanel buttonPanel = new JPanel(new GridLayout(5, 4, 10, 10)); // Gaps between buttons
 
         String[] buttonLabels = {
                 "7", "8", "9", "/",
                 "4", "5", "6", "*",
                 "1", "2", "3", "-",
-                "0", ".", "=", "+"
+                "0", ".", "=", "+",
+                "DEL", "C" // Add C button to clear calculator and delete button
         };
 
         for (String label : buttonLabels) {
-            JButton button = new JButton(label);
+            JButton button = createStyledButton(label);
             button.addActionListener(new ButtonClickListener());
             buttonPanel.add(button);
         }
@@ -45,20 +48,66 @@ public class CalculatorDisplay extends JFrame implements CalculatorUI {
         setVisible(true);
     }
 
+    private JButton createStyledButton(String label) {
+        JButton button = new JButton(label);
+        button.setPreferredSize(new Dimension(100, 100)); // Button size
+        button.setFont(new Font("Arial", Font.PLAIN, 25));
+
+        // Color
+        button.setBackground(Color.GRAY);
+        button.setFocusPainted(false);
+        button.setMargin(new Insets(0, 0, 0, 0));
+
+        // Button border
+        button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
+        button.setBorderPainted(false);
+
+        // Result button
+        if (label.equals("=")) {
+            button.setBackground(Color.BLUE);
+            button.setForeground(Color.WHITE);
+        }
+
+        // Operation buttons
+        else if (label.matches("[/*+-]")) {
+            button.setBackground(Color.ORANGE);
+            button.setForeground(Color.BLACK);
+        }
+
+        // Number buttons
+        else if (label.matches("[0-9.]")) {
+            button.setBackground(Color.WHITE);
+            button.setForeground(Color.BLACK);
+        }
+
+        // Clear button
+        else if (label.equals("C")) {
+            button.setBackground(Color.RED);
+            button.setForeground(Color.WHITE);
+        }
+
+        return button;
+    }
+
     private class ButtonClickListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             JButton source = (JButton) event.getSource();
             String buttonText = source.getText();
 
-            if (buttonText.equals("=") || event.getActionCommand().equals("\n")) {
-                // Handle equals sign or Enter key press
+            if (buttonText.equals("=")) {
                 String formula = display.getText();
                 try {
                     double result = calculator.calculate(formula);
                     display.setText(Double.toString(result));
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    display.setText("Error: " + e.getMessage());
+                    display.setText("Error");
+                }
+            } else if (buttonText.equals("C")) { // Clear button
+                display.setText("");
+            }else if (buttonText.equals("DEL")) {
+                String currentText = display.getText();
+                if (!currentText.isEmpty()) {
+                    display.setText(currentText.substring(0, currentText.length() - 1));
                 }
             } else {
                 display.setText(display.getText() + buttonText);
