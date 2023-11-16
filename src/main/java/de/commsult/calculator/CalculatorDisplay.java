@@ -86,6 +86,12 @@ public class CalculatorDisplay extends JFrame implements CalculatorUI {
             button.setForeground(Color.WHITE);
         }
 
+        //Delete button
+        else if (label.equals("DEL")) {
+            button.setBackground(Color.GRAY);
+            button.setForeground(Color.WHITE);
+        }
+
         return button;
     }
 
