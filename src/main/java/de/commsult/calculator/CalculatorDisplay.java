@@ -34,7 +34,7 @@ public class CalculatorDisplay extends JFrame implements CalculatorUI {
                 "4", "5", "6", "*",
                 "1", "2", "3", "-",
                 "0", ".", "=", "+",
-                "DEL", "C" // Add C button to clear calculator and delete button
+                "DEL", "C"
         };
 
         for (String label : buttonLabels) {
@@ -100,7 +100,7 @@ public class CalculatorDisplay extends JFrame implements CalculatorUI {
             JButton source = (JButton) event.getSource();
             String buttonText = source.getText();
 
-            if (buttonText.equals("=")) {
+            if (buttonText.equals("=")) { //Result button
                 String formula = display.getText();
                 try {
                     double result = calculator.calculate(formula);
@@ -110,7 +110,7 @@ public class CalculatorDisplay extends JFrame implements CalculatorUI {
                 }
             } else if (buttonText.equals("C")) { // Clear button
                 display.setText("");
-            }else if (buttonText.equals("DEL")) {
+            }else if (buttonText.equals("DEL")) { //Delete button
                 String currentText = display.getText();
                 if (!currentText.isEmpty()) {
                     display.setText(currentText.substring(0, currentText.length() - 1));
